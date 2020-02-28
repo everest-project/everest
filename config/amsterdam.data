@@ -1,0 +1,6 @@
+train=/data/ssd/public/pfzhang/amsterdam/train.txt
+valid=/data/ssd/public/pfzhang/amsterdam/val.txt
+test=/data/ssd/public/pfzhang/amsterdam/test.txt
+distribution=/data/ssd/public/pfzhang/amsterdam/distribution/
+backup=/data/ssd/public/pfzhang/amsterdam/checkpoint/yolomdn.pth
+object=2

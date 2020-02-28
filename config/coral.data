@@ -1,0 +1,11 @@
+images=/data/ssd/public/pfzhang/coral/images_resize
+split=/data/ssd/public/pfzhang/coral/split
+train=/data/ssd/public/pfzhang/coral/split/train.txt
+valid=/data/ssd/public/pfzhang/coral/split/val.txt
+test=/data/ssd/public/pfzhang/coral/split/test.txt
+all=/data/ssd/public/pfzhang/coral/split/all.txt
+distribution=/data/ssd/public/pfzhang/coral/distribution
+backup=/data/ssd/public/pfzhang/coral/checkpoint/yolomdn.pth
+num_train=5000
+num_valid=2000
+object=0

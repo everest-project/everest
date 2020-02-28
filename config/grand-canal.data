@@ -1,0 +1,6 @@
+train=/data/ssd/public/pfzhang/grand-canal/train.txt
+valid=/data/ssd/public/pfzhang/grand-canal/val.txt
+test=/data/ssd/public/pfzhang/grand-canal/test.txt
+distribution=/data/ssd/public/pfzhang/grand-canal/distribution/
+backup=/data/ssd/public/pfzhang/grand-canal/checkpoint/yolomdn.pth
+object=8

@@ -1,0 +1,10 @@
+images=/data/ssd/public/pfzhang/video/virtualroad/images_resize
+split=/data/ssd/public/pfzhang/video/virtualroad/split
+model_def=config/yolomdn-virtualroad.cfg
+distribution=/data/ssd/public/pfzhang/video/virtualroad/distribution
+backup=/data/ssd/public/pfzhang/video/virtualroad/checkpoint/yolomdn.pth
+diff_thres=0.001
+num_train=5000
+num_valid=2000
+max_score=50
+object=2
