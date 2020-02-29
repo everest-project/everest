@@ -25,11 +25,11 @@ Your machine will need at least:
 - python 3.6 - For Linux, use your package manager.
 - CUDA, CUDNN, tensorflow-gpu
 
-    [TensorFlow 1.14.0](https://github.com/tensorflow/tensorflow) with CUDA 10.0 and CUDNN 7.6.0 -- WE ONLY TEST OUR CODE WITH COMBINATION. 
+    [TensorFlow 1.14.0](https://github.com/tensorflow/tensorflow) with CUDA 10.0 and CUDNN 7.6.0 -- WE ONLY TEST OUR CODE WITH THIS COMBINATION. 
     
-    Note: Having both TensorFlow-gpu 1.14.0 and more recent versions installed is complicated. This project requires cuDNN 7.6.0 and more recent versions of TensorFlow may break with the installed. Therefore, it is recommended that users uninstall more recent versions of TensorFlow and delete other version of cuDNN if they are installed.
+    Note: Having both TensorFlow-gpu 1.14.0 and more recent versions installed is complicated. This project requires cuDNN 7.6.0 and more recent versions of TensorFlow may break with the installed. Therefore, it is recommended that users uninstall more recent versions of TensorFlow and delete other versions of cuDNN.
     
-    You can refer [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.2-Installation-Guide-on-Ubuntu-16.04) to install the OpenCV 3.2 with FFmpeg bindings.
+    You can refer to [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.2-Installation-Guide-on-Ubuntu-16.04) in order to install the OpenCV 3.2 with FFmpeg bindings.
     
 
 ## Setting up the Top-K Query Engine
