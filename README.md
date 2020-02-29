@@ -22,7 +22,7 @@ Your machine will need at least:
 
 ## Guides on Installing the Requirements 
 
-- python 3.6 - For Linux, use your package manager.
+- python 3.6 - For Linux, we recommend that the users use [anconda](https://www.anaconda.com/).
 - CUDA, CUDNN, tensorflow-gpu
 
     [TensorFlow 1.14.0](https://github.com/tensorflow/tensorflow) with CUDA 10.0 and CUDNN 7.6.0 -- WE ONLY TEST OUR CODE WITH THIS COMBINATION. 
