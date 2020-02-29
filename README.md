@@ -6,10 +6,9 @@ This is the official project page for Everest project.
 
 You will need the following installed:
 
-- python>=3.7.4
+- Python>=3.7.4
 - CUDA>=10.0
 - CUDNN>=7.6.0
-- TensorFlow-GPU>=1.14.0
 - Opencv 3.2 with FFmpeg bindings
 - g++ 4.8.5 or later 
 
@@ -18,19 +17,14 @@ Your machine will need at least:
 - A GPU (this has only been tested with NVIDIA GeForce GTX 1080 Ti)
 - 64+ GB of memory
 - 500+ GB of disk space 
-- AVX2 capabilities
 
 ## Guides on Installing the Requirements 
 
 - python 3.7.4 - For Linux, we recommend that the users use [anconda](https://www.anaconda.com/).
-- CUDA, CUDNN, TensorFlow-GPU
+- CUDA, CUDNN
 
-    [TensorFlow 1.14.0](https://github.com/tensorflow/tensorflow) with CUDA 10.0 and CUDNN 7.6.0 -- WE ONLY TEST OUR CODE WITH THIS COMBINATION. 
-    
-    Note: Having both TensorFlow-gpu 1.14.0 and more recent versions installed is complicated. This project requires cuDNN 7.6.0 and more recent versions of TensorFlow may break with the installed. Therefore, it is recommended that users uninstall more recent versions of TensorFlow and delete other versions of cuDNN.
-    
     You can refer to [here](https://github.com/BVLC/caffe/wiki/OpenCV-3.2-Installation-Guide-on-Ubuntu-16.04) in order to install the OpenCV 3.2 with FFmpeg bindings.
-    
+
 
 ## Setting up the Top-K Query Engine
 
@@ -40,6 +34,15 @@ To set up the query engine, do the following.
 git clone https://github.com/xchani/everest.git
 cd everest
 pip3 install -r requirements.txt --user
+```
+
+## Download Pretrained Weights
+
+```sh
+mkdir weights
+cd weights
+wget -c https://pjreddie.com/media/files/yolov3.weights
+wget -c https://pjreddie.com/media/files/yolov3-tiny.weights
 ```
 
 ## Generating Queries
