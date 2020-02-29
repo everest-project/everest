@@ -6,12 +6,12 @@ This is the official project page for Everest project.
 
 You will need the following installed:
 
-- python>=3.6
+- python>=3.6.8
 - CUDA>=9.0
-- CUDNN>=
-- Pytorch-gpu>=
+- CUDNN>=7.6.0
+- tensorflow-gpu>=1.4.0
 - Opencv 3.2 with FFmpeg bindings
-- g++ >= 
+- g++ 4.8.5 or later 
 
 Your machine will need at least:
 
@@ -20,8 +20,11 @@ Your machine will need at least:
 - 500+ GB of disk space 
 - AVX2 capabilities
 
-## Installation
+## Guides on Installing the Requirements 
 
+- python 3.6 - For Linux, use your package manager.
+- CUDA, CUDNN, tensorflow-gpu
+-- 
 ```sh
 git clone https://github.com/xchani/everest.git
 cd everest
