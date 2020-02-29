@@ -44,7 +44,7 @@ pip3 install -r requirements.txt --user
 
 ## Generating Queries
 
-Once you have query engine set up, the ```run.sh``` is the script to run a top-k example. 
+Once you have query engine set up, the ```run.sh``` is the script to run a top-k query example. 
 
 ```sh
 bash run.sh ${config}
