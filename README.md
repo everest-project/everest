@@ -7,7 +7,7 @@ This is the official project page for Everest project.
 You will need the following installed:
 
 - python>=3.6.8
-- CUDA>=9.0
+- CUDA>=10.0
 - CUDNN>=7.6.0
 - tensorflow-gpu>=1.4.0
 - Opencv 3.2 with FFmpeg bindings
@@ -24,7 +24,11 @@ Your machine will need at least:
 
 - python 3.6 - For Linux, use your package manager.
 - CUDA, CUDNN, tensorflow-gpu
--- 
+
+    [TensorFlow 1.4.0](https://github.com/tensorflow/tensorflow) with CUDA 10.0 and CUDNN 7.6.0 -- WE ONLY TEST OUR CODE WITH COMBINATION. 
+    
+    
+    
 ```sh
 git clone https://github.com/xchani/everest.git
 cd everest
