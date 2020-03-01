@@ -31,7 +31,7 @@ Your machine will need at least:
 To set up the query engine, do the following.
 
 ```sh
-git clone https://github.com/xchani/everest.git
+git clone https://github.com/everest-project/everest.git
 cd everest
 pip3 install -r requirements.txt --user
 ```
@@ -52,5 +52,3 @@ Once you have query engine set up, the ```run.sh``` is the script to run a top-k
 ```sh
 bash run.sh ${config}
 ```
-Have fun!
-
