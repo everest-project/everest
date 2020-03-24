@@ -1,6 +1,7 @@
 numpy
 torch>=1.0
 torchvision
-matplotlib
-terminaltables
+pillow
 tqdm
+scipy
+blist
