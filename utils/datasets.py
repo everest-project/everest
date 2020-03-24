@@ -88,14 +88,14 @@ class VideoObjectDataset_Diff(Dataset):
         idxs, imgs = list(zip(*batch))
         ref_img = imgs[len(imgs) // 2]
         ref_idx = idxs[len(imgs) // 2]
-        
+
         imgs = torch.stack(imgs)
         idxs = torch.stack(idxs)
         diff = ((imgs - ref_img.unsqueeze(0))**2).view(len(imgs), -1).mean(-1)
 
         discarded = ((diff < self.threshold) & (idxs != ref_idx)).nonzero().squeeze(1)
         remained = ((diff >= self.threshold) | (idxs == ref_idx)).nonzero().squeeze(1)
-        
+
         remained_refs = torch.ones([len(remained), self.ref_dist + 1], dtype=torch.int64) * -1
         remained_refs[:,0] = idxs[remained]
         remained_refs[:,1] = idxs[remained]
@@ -114,7 +114,7 @@ class VideoObjectDataset_Diff(Dataset):
 
 
 class VideoObjectDataset(Dataset):
-    def __init__(self, list_path, img_size=416, augment=True, size=None, obj=2):
+    def __init__(self, list_path, img_size=416, augment=True, size=None, obj=2, score_func="count"):
         with open(list_path, "r") as file:
             self.img_files = file.readlines()
 
@@ -133,6 +133,7 @@ class VideoObjectDataset(Dataset):
         self.max_objects = 100
         self.augment = augment
         self.batch_count = 0
+        self.score_func = score_func
 
     def __getitem__(self, index):
         img_path = self.img_files[index % len(self.img_files)]
@@ -142,15 +143,21 @@ class VideoObjectDataset(Dataset):
         img = resize(img, self.img_size)
 
         label_path = self.label_files[index % len(self.img_files)].rstrip()
-        
+
         boxes = []
         if os.stat(label_path).st_size != 0:
             boxes = np.loadtxt(label_path, delimiter=',').reshape(-1, 7)
-            boxes = [box for box in boxes if int(box[-1]) == self.obj]
+            if self.score_func == "count":
+                boxes = [box for box in boxes if int(box[-1]) == self.obj]
+            elif self.score_func == "area":
+                bus_idx = 5
+                boxes = [box for box in boxes if int(box[-1]) == self.obj or int(box[-1]) == bus_idx]
+            else:
+                raise NotImplementedError
 
         if len(boxes) == 0:
             boxes = np.array([])
-        else: 
+        else:
             boxes = np.stack(boxes)
         ratio = self.img_size / 416
         targets = None
@@ -166,7 +173,18 @@ class VideoObjectDataset(Dataset):
                 if np.random.random() < 0.5:
                     img, targets = horisontal_flip(img, targets)
 
-        return img_path, img, targets, len(boxes)
+        if self.score_func == "count":
+            score = len(boxes)
+        elif self.score_func == "area":
+            score = 0
+            for det in boxes:
+                score += (float(det[2]) - float(det[0])) * (float(det[3]) - float(det[1]))
+            score /= 416 * 416
+            score = int(min(score, 1) * 50)
+        else:
+            raise NotImplementedError
+
+        return img_path, img, targets, score
 
     def collate_fn(self, batch):
         paths, imgs, targets, scores = list(zip(*batch))
@@ -178,7 +196,7 @@ class VideoObjectDataset(Dataset):
 
         if len(targets) == 0:
             targets = torch.FloatTensor([]).view(0, 7)
-        else: 
+        else:
             targets = torch.cat(targets, 0)
         # Selects new image size every tenth batch
         imgs = torch.stack(imgs)

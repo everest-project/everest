@@ -103,10 +103,10 @@ class CertainTable():
     def __init__(self, k, initial=None):
         initial_sfs = []
         if initial is not None:
-            scores = groundtruth_shortcut(idx2path(path_list, initial), obj)
+            scores = groundtruth_shortcut(idx2path(path_list, initial), obj, opt.score_func)
             initial_sfs = [SF(s, f) for (s,f) in zip(scores, initial)]
             initial_sfs.sort(reverse=True)
-        self.topk = sortedlist(initial_sfs[:k]) 
+        self.topk = sortedlist(initial_sfs[:k])
         self.lam = 0 if len(self.topk) == 0 else self.topk[0].s
         self.mu = self.lam if len(self.topk) <= 1 else self.topk[1].s
         self.H = np.zeros([cdf.shape[1]])
@@ -258,7 +258,7 @@ def evaluate(topk, k, window=1):
     topk_idxs = [sf.f for sf in topk]
     print("finding ground-truth label")
     if window < 2:
-        gts = np.array(groundtruth_shortcut(path_list, obj))
+        gts = np.array(groundtruth_shortcut(path_list, obj, opt.score_func))
     else:
         num_windows = math.ceil(len(path_list) / window)
         gts = np.array(groundtruth_window(range(0, num_windows), window, window))
@@ -284,10 +284,10 @@ def groundtruth_window(ws, window_size, window_samples):
     for w in ws:
         paths = path_list[w * window_size: (w+1) * window_size]
         random.shuffle(paths)
-        window_scores = groundtruth_shortcut(paths[:window_samples], obj)
+        window_scores = groundtruth_shortcut(paths[:window_samples], obj, opt.score_func)
         scores.append(int(round(np.mean(window_scores))))
     return scores
-        
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -299,12 +299,12 @@ if __name__ == "__main__":
     parser.add_argument("--window_samples", type=int, default=1)
     opt = parser.parse_args()
     print(opt)
-    
+
     prev = time.time()
     data_config = parse_data_config(opt.data_config)
-    split_dir = data_config["split"] 
+    split_dir = data_config["split"]
     obj = int(data_config["object"])
-    distribution_dir = data_config["distribution"] 
+    distribution_dir = data_config["distribution"]
 
     with open(split_dir + "/all.txt", "rt") as f:
         path_list = f.readlines()
@@ -338,7 +338,7 @@ if __name__ == "__main__":
             candidates = select_heap.select(topk_prob)
             clean_f = [sf.f for sf in candidates]
         if opt.window < 2:
-            scores = groundtruth_shortcut(f2path(clean_f), obj)
+            scores = groundtruth_shortcut(f2path(clean_f), obj, opt.score_func)
             for f, score in zip(clean_f, scores):
                 certain_table.insert_sf(SF(score, f))
                 mirrors = remained_ref[f, 2:]
@@ -350,7 +350,7 @@ if __name__ == "__main__":
             scores = groundtruth_window(clean_f, opt.window, opt.window_samples)
             for w, score in zip(clean_f, scores):
                 certain_table.insert_sw(SF(score, w))
- 
+
         niter += 1
 
         if certain_table.lam != prev_lam or certain_table.mu != prev_mu:

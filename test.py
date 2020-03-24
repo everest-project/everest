@@ -20,11 +20,11 @@ from torch.autograd import Variable
 import torch.optim as optim
 from config import *
 
-def evaluate_video(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size, n_cpu, obj):
+def evaluate_video(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size, n_cpu, obj, score_func):
     model.eval()
 
     # Get dataloader
-    dataset = VideoObjectDataset(path, img_size=img_size, augment=False, obj=obj)
+    dataset = VideoObjectDataset(path, img_size=img_size, augment=False, obj=obj, score_func=score_func)
     dataloader = torch.utils.data.DataLoader(
         dataset, batch_size=batch_size, shuffle=False, num_workers=n_cpu, collate_fn=dataset.collate_fn)
 

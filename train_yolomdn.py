@@ -39,6 +39,7 @@ if __name__ == "__main__":
     parser.add_argument("--pretrained_weights", type=str, default="weights/yolov3-tiny.weights", help="if specified starts from checkpoint model")
     parser.add_argument("--n_cpu", type=int, default=16, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=128, help="size of each image dimension")
+    parser.add_argument("--score_func", choices=["count", "area"], default="count")
     opt = parser.parse_args()
     print(opt)
 
@@ -63,7 +64,7 @@ if __name__ == "__main__":
             model.load_darknet_weights(opt.pretrained_weights)
 
     # Get dataloader
-    dataset = VideoObjectDataset(train_path, augment=True, img_size=opt.img_size, obj=obj)
+    dataset = VideoObjectDataset(train_path, augment=True, img_size=opt.img_size, obj=obj, score_func=opt.score_func)
     dataloader = torch.utils.data.DataLoader(
         dataset,
         batch_size=opt.batch_size,
@@ -99,11 +100,11 @@ if __name__ == "__main__":
         for batch_i, (_, imgs, targets, scores) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
 
-            
+
             imgs = Variable(imgs.to(device))
             targets = Variable(targets.to(device), requires_grad=False)
             scores = Variable(scores.to(device), requires_grad=False)
-            
+
             yolo_loss, outputs, mdn_output = model(imgs, targets, scores, epoch=epoch)
             wta_loss = mdn_output[0]
             mdn_loss = mdn_output[1]
@@ -175,8 +176,9 @@ if __name__ == "__main__":
         img_size=opt.img_size,
         batch_size=opt.batch_size,
         n_cpu=opt.n_cpu,
-        obj=obj
-        )
+        obj=obj,
+        score_func=opt.score_func
+    )
 
     torch.save(model.state_dict(), data_config["backup"])
 
