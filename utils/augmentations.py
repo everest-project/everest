@@ -1,22 +1,9 @@
-import imgaug.augmenters as iaa
-from .transforms import *
-
-class DefaultAug(ImgAug):
-    def __init__(self, ):
-        self.augmentations = iaa.Sequential([
-            iaa.Dropout([0.0, 0.01]),
-            iaa.Sharpen((0.0, 0.1)),
-            iaa.Affine(rotate=(-10, 10), translate_percent=(-0.1,0.1)),  # rotate by -45 to 45 degrees (affects segmaps)
-            iaa.AddToBrightness((-10, 10)), 
-            iaa.AddToHue((-5, 5)),
-            iaa.Fliplr(0.5),
-        ])
+import torch
+import torch.nn.functional as F
+import numpy as np
 
 
-AUGMENTATION_TRANSFORMS = transforms.Compose([
-        AbsoluteLabels(),
-        DefaultAug(),
-        PadSquare(),
-        RelativeLabels(),
-        ToTensor(),
-    ])
+def horisontal_flip(images, targets):
+    images = torch.flip(images, [-1])
+    targets[:, 2] = 1 - targets[:, 2]
+    return images, targets

@@ -1,4 +1,18 @@
 
+def parse_model_group(module_defs):
+    model_configs = []
+    for module_i, module_def in enumerate(module_defs):
+        if module_def["type"] == "hmdn":
+            M_list = [x.rstrip().lstrip() for x in module_def["M"].split(',')]
+            H_list = [x.rstrip().lstrip() for x in module_def["num_h"].split(',')]
+            for M in M_list:
+                for H in H_list:
+                    model_configs.append(module_defs[:])
+                    model_configs[-1][module_i] = module_def.copy()
+                    model_configs[-1][module_i]["M"] = M
+                    model_configs[-1][module_i]["num_h"] = H
+            break
+    return model_configs
 
 def parse_model_config(path):
     """Parses the yolo-v3 layer configuration file and returns module definitions"""
