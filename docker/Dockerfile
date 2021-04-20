@@ -27,7 +27,7 @@ RUN curl -fsSL https://developer.download.nvidia.com/compute/redist/VideoCodec/v
     ln -s /usr/local/cuda/lib64/stubs/libnvcuvid.so /usr/lib/libnvcuvid.so
 
 # decord
-RUN git clone --recursive https://github.com/dmlc/decord /home/decord
+RUN git clone --depth 1 --branch v0.3.9 --recursive https://github.com/dmlc/decord /home/decord
 WORKDIR /home/decord
 
 RUN mkdir build && cd build && cmake .. -DUSE_CUDA=/usr/local/cuda -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc && make && \

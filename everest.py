@@ -5,10 +5,10 @@ import random
 import argparse
 import numpy as np
 
+from utils.video_reader import *
 import config
 from utils.topk_utils import *
 from utils.label_reader import *
-from utils.video_reader import *
 from oracle.utils import *
 from phase1 import *
 from phase2 import topk
