@@ -78,14 +78,14 @@ class ExcitingMoment(BaseScoringUDF):
                 for b in boxes:
                     if b[-1] == 0:
                         ball_exist = True
-                    if b[4] > ball_max_conf:
-                        ball_max_conf = b[4]
-                        ball_max = b
+                        if b[4] > ball_max_conf:
+                            ball_max_conf = b[4]
+                            ball_max = b
                     if b[-1] == 1:
                         door_exist = True
-                    if b[4] > door_max_conf:
-                        door_max_conf = b[4]
-                        door_max = b
+                        if b[4] > door_max_conf:
+                            door_max_conf = b[4]
+                            door_max = b
                 if ball_exist == True and door_exist == True:
                     ball_x = (ball_max[0]+ball_max[2])/2
                     ball_y = (ball_max[1]+ball_max[3])/2
@@ -97,6 +97,17 @@ class ExcitingMoment(BaseScoringUDF):
                     if score <= 0:
                         score = 0
                 scores.append(score)
+                if visualize:
+                    visual_img = np.copy(imgs[i])
+                    visual_img = cv2.resize(visual_img, (739, 416))
+                    for x1, y1, x2, y2, conf, cls_conf, cls_pred in relavant_boxes:
+                        x1 = int(x1.item() / 416 * 739)
+                        x2 = int(x2.item() / 416 * 739)
+                        y1 = int(y1.item())
+                        y2 = int(y2.item())
+                        cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                if visual_imgs:
+                    visual_imgs.append(Image.fromarray(visual_img))
                 
         # end change        
                 relavant_boxes = [box for box in boxes if int(box[-1]) == self.obj and float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
