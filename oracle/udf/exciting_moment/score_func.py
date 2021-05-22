@@ -57,12 +57,48 @@ class ExcitingMoment(BaseScoringUDF):
             detections = non_max_suppression(detections, 0.1, 0.45)
         scores = []
         visual_imgs = []
+        
+        #start change 
+        ball_exist = False
+        door_exist = False
+
+        ball_max_conf = 0.0
+        door_max_conf = 0.0
+
+        ball_max = None
+        door_max = None
+
+        score = 0
         for i, boxes in enumerate(detections):
             if boxes is None:
                 scores.append(0)
                 if visualize:
                     visual_imgs.append(imgs[i])
             else:
+                for b in boxes:
+                    if b[-1] == 0:
+                        ball_exist = True
+                    if b[4] > ball_max_conf:
+                        ball_max_conf = b[4]
+                        ball_max = b
+                    if b[-1] == 1:
+                        door_exist = True
+                    if b[4] > door_max_conf:
+                        door_max_conf = b[4]
+                        door_max = b
+                if ball_exist == True and door_exist == True:
+                    ball_x = (ball_max[0]+ball_max[2])/2
+                    ball_y = (ball_max[1]+ball_max[3])/2
+                    door_x = (door_max[0]+door_max[2])/2
+                    door_y = (door_max[1]+door_max[3])/2
+                    score = 1000-pow(math.sqrt(pow((door_x-ball_x),2)+pow((door_y-ball_y),2)),2)
+                    score = int(score/20)
+                    print(score)
+                    if score <= 0:
+                        score = 0
+                scores.append(score)
+                
+        # end change        
                 relavant_boxes = [box for box in boxes if int(box[-1]) == self.obj and float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
                 scores.append(len(relavant_boxes))
                 if visualize:
