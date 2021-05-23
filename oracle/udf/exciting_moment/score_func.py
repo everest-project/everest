@@ -23,16 +23,19 @@ import numpy as np
 matplotlib.use('agg')
 
 
-obj_names = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+#obj_names = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+obj_names = ["ball", "door"]
 
 class ExcitingMoment(BaseScoringUDF):
     def __init__(self):
         super().__init__()
         self.arg_parser.add_argument("--class_thres", type=float, default=0.5)
         self.arg_parser.add_argument("--obj_thres", type=float, default=0)
-        self.arg_parser.add_argument("--obj", type=str, choices=obj_names, default="car")
-        self.model_config = 'config/yolov3.cfg'
-        self.weights = 'weights/yolov3.weights'
+        self.arg_parser.add_argument("--obj", type=str, choices=obj_names, default="ball")
+        # self.model_config = 'config/yolov3.cfg'
+        # self.weights = 'weights/yolov3.weights'        
+        self.model_config = 'config/yolov3-spp5-custom.cfg'
+        self.weights = 'weights/yolov3-spp5-custom_best.weights'
     
     def initialize(self, opt, gpu=None):
         self.opt = opt
@@ -60,8 +63,8 @@ class ExcitingMoment(BaseScoringUDF):
         
         #start change 
         for i, boxes in enumerate(detections):
-            boxes = [b for b in boxes if float(b[4]) >= self.opt.class_thres]
-            boxes = [b for b in boxes if int(b[-1]) == 0 or int(b[-1]) == 1]
+            boxes = [box for box in boxes if float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
+            boxes = [box for box in boxes if int(box[-1]) == 0 or int(box[-1]) == 1]
 
             ball_exist = False
             door_exist = False
@@ -79,17 +82,17 @@ class ExcitingMoment(BaseScoringUDF):
                 if visualize:
                     visual_imgs.append(imgs[i])
             else:
-                for b in boxes:
-                    if b[-1] == 0:
+                for box in boxes:
+                    if box[-1] == 0:
                         ball_exist = True
-                        if b[4] > ball_max_conf:
-                            ball_max_conf = b[4]
-                            ball_max = b
-                    if b[-1] == 1:
+                        if box[4] > ball_max_conf:
+                            ball_max_conf = box[4]
+                            ball_max = box
+                    if box[-1] == 1:
                         door_exist = True
-                        if b[4] > door_max_conf:
-                            door_max_conf = b[4]
-                            door_max = b
+                        if box[4] > door_max_conf:
+                            door_max_conf = box[4]
+                            door_max = box
                 if ball_exist == True and door_exist == True:
                     ball_x = (ball_max[0]+ball_max[2])/2
                     ball_y = (ball_max[1]+ball_max[3])/2
@@ -120,19 +123,6 @@ class ExcitingMoment(BaseScoringUDF):
                     visual_imgs.append(Image.fromarray(visual_img))
                 
         # end change        
-                relavant_boxes = [box for box in boxes if int(box[-1]) == self.obj and float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
-                scores.append(len(relavant_boxes))
-                if visualize:
-                    visual_img = np.copy(imgs[i])
-                    visual_img = cv2.resize(visual_img, (739, 416))
-                    for x1, y1, x2, y2, conf, cls_conf, cls_pred in relavant_boxes:
-                        x1 = int(x1.item() / 416 * 739)
-                        x2 = int(x2.item() / 416 * 739)
-                        y1 = int(y1.item())
-                        y2 = int(y2.item())
-                        cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                if visual_imgs:
-                    visual_imgs.append(Image.fromarray(visual_img))
         if visualize:
             return scores, visual_imgs
         else:
