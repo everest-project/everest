@@ -59,17 +59,21 @@ class ExcitingMoment(BaseScoringUDF):
         visual_imgs = []
         
         #start change 
-        ball_exist = False
-        door_exist = False
-
-        ball_max_conf = 0.0
-        door_max_conf = 0.0
-
-        ball_max = None
-        door_max = None
-
-        score = 0
         for i, boxes in enumerate(detections):
+            boxes = [b for b in boxes if float(b[4]) >= self.opt.class_thres]
+            boxes = [b for b in boxes if int(b[-1]) == 0 or int(b[-1]) == 1]
+
+            ball_exist = False
+            door_exist = False
+
+            ball_max_conf = 0.0
+            door_max_conf = 0.0
+
+            ball_max = None
+            door_max = None
+
+            score = 0
+            
             if boxes is None:
                 scores.append(0)
                 if visualize:
@@ -100,12 +104,18 @@ class ExcitingMoment(BaseScoringUDF):
                 if visualize:
                     visual_img = np.copy(imgs[i])
                     visual_img = cv2.resize(visual_img, (739, 416))
-                    for x1, y1, x2, y2, conf, cls_conf, cls_pred in relavant_boxes:
-                        x1 = int(x1.item() / 416 * 739)
-                        x2 = int(x2.item() / 416 * 739)
-                        y1 = int(y1.item())
-                        y2 = int(y2.item())
-                        cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    # draw ball rectangle          
+                    x1 = int(ball_max[0].item() / 416 * 739)
+                    x2 = int(ball_max[2].item() / 416 * 739)
+                    y1 = int(ball_max[1].item())
+                    y2 = int(ball_max[3].item())
+                    cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    # draw door rectangle
+                    x1 = int(door_max[0].item() / 416 * 739)
+                    x2 = int(door_max[2].item() / 416 * 739)
+                    y1 = int(door_max[1].item())
+                    y2 = int(door_max[3].item())
+                    cv2.rectangle(visual_img, (x1, y1), (x2, y2), (0, 255, 0), 2)                    
                 if visual_imgs:
                     visual_imgs.append(Image.fromarray(visual_img))
                 
