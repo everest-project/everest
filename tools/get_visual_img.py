@@ -44,6 +44,6 @@ if __name__ == "__main__":
             scores.extend(udf.get_scores(imgs, visualize=True)[0])
             image.append(udf.get_scores(imgs, visualize=True)[1])
     
-    image[0].save("test.jpg")    
+    image[10][0].save("test.jpg")    
     os.makedirs(config.cached_gt_dir, exist_ok=True)
     np.save(output_path, np.array(scores))
