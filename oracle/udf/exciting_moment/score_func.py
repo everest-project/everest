@@ -107,18 +107,20 @@ class ExcitingMoment(BaseScoringUDF):
                 if visualize:
                     visual_img = np.copy(imgs[i])
                     visual_img = cv2.resize(visual_img, (739, 416))
-                    # draw ball rectangle          
-                    x1 = int(ball_max[0].item() / 416 * 739)
-                    x2 = int(ball_max[2].item() / 416 * 739)
-                    y1 = int(ball_max[1].item())
-                    y2 = int(ball_max[3].item())
-                    cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                    # draw ball rectangle
+                    if ball_exist == True:
+                        x1 = int(ball_max[0].item() / 416 * 739)
+                        x2 = int(ball_max[2].item() / 416 * 739)
+                        y1 = int(ball_max[1].item())
+                        y2 = int(ball_max[3].item())
+                        cv2.rectangle(visual_img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                     # draw door rectangle
-                    x1 = int(door_max[0].item() / 416 * 739)
-                    x2 = int(door_max[2].item() / 416 * 739)
-                    y1 = int(door_max[1].item())
-                    y2 = int(door_max[3].item())
-                    cv2.rectangle(visual_img, (x1, y1), (x2, y2), (0, 255, 0), 2)                    
+                    if door_exist == True:
+                        x1 = int(door_max[0].item() / 416 * 739)
+                        x2 = int(door_max[2].item() / 416 * 739)
+                        y1 = int(door_max[1].item())
+                        y2 = int(door_max[3].item())
+                        cv2.rectangle(visual_img, (x1, y1), (x2, y2), (0, 255, 0), 2)                    
                 if visual_imgs:
                     visual_imgs.append(Image.fromarray(visual_img))
                 
