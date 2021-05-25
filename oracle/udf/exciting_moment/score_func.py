@@ -62,14 +62,14 @@ class ExcitingMoment(BaseScoringUDF):
         visual_imgs = []
         
         #start change 
+        for i, boxes in enumerate(detections):
             if boxes is None:
                 scores.append(0)
                 if visualize:
                     visual_imgs.append(imgs[i])
             else:
-                for i, boxes in enumerate(detections):
-                    boxes = [box for box in boxes if float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
-                    boxes = [box for box in boxes if int(box[-1]) == 0 or int(box[-1]) == 1]
+                boxes = [box for box in boxes if float(box[4]) >= self.opt.class_thres and float(box[5]) >= self.opt.obj_thres]
+                boxes = [box for box in boxes if int(box[-1]) == 0 or int(box[-1]) == 1]
 
                 ball_exist = False
                 door_exist = False
