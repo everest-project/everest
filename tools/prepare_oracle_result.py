@@ -1,3 +1,8 @@
+from utils.video_reader import DecordVideoReader
+from utils.parse_config import parse_data_config
+from utils.label_reader import *
+from utils.utils import *
+from oracle.utils import *
 import torch
 import lmdb
 import decord
@@ -6,11 +11,6 @@ import config
 import tqdm
 import sys
 from os import path as osp
-from utils.parse_config import parse_data_config
-from utils.label_reader import *
-from utils.utils import *
-from oracle.utils import *
-from utils.video_reader import DecordVideoReader
 import numpy as np
 import config
 import io
