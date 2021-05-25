@@ -1,13 +1,13 @@
 --video
-videos/traffic_footage.mp4
+videos/test.mp4
 --length
-540000
+800
 --diff_thres
 0.0001
 --num_train
 0.005
 --num_valid
-3000
+300
 --max_score
 1000
 --udf
