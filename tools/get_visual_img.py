@@ -14,7 +14,7 @@ from os import path as osp
 import numpy as np
 import config
 import io
-
+from PIL import Image
 LMDB_MAP_SIZE = 1 << 40
 
 if __name__ == "__main__":
@@ -43,8 +43,12 @@ if __name__ == "__main__":
             imgs = vr.get_batch(batch)
             scores.extend(udf.get_scores(imgs, visualize=True)[0])
             image.append(udf.get_scores(imgs, visualize=True)[1])
-    
-    print(image)
+    for img in image:
+        if img:
+            print (img[0])
+            img[0].save("test.jpg")
+            break
+   # print(image[4])
     #image[0][0].save("test.jpg")    
     os.makedirs(config.cached_gt_dir, exist_ok=True)
     np.save(output_path, np.array(scores))

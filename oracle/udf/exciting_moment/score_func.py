@@ -121,7 +121,6 @@ class ExcitingMoment(BaseScoringUDF):
                         y1 = int(door_max[1].item())
                         y2 = int(door_max[3].item())
                         cv2.rectangle(visual_img, (x1, y1), (x2, y2), (0, 255, 0), 2)                    
-                if visual_imgs:
                     visual_imgs.append(Image.fromarray(visual_img))
                 
         # end change        
