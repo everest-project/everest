@@ -37,17 +37,23 @@ if __name__ == "__main__":
     batches = [list(range(i * opt.batch, (i+1) * opt.batch)) for i in range(num_batches)]
 
     scores = []
-    image = []
+    visual_imgs = []
     for batch in tqdm.tqdm(batches, desc="labeling"):
         if len(batch) > 0:
             imgs = vr.get_batch(batch)
-            scores.extend(udf.get_scores(imgs, visualize=True)[0])
-            image.append(udf.get_scores(imgs, visualize=True)[1])
-    for img in image:
-        if img:
-            print (img[0])
-            img[0].save("test.jpg")
+            score,visual_img =udf.get_scores(imgs, visualize=True)
+
+            scores.extend(score)
+            visual_imgs.extend(visual_img)
+    for visual_img in visual_imgs:
+        if visual_img:
+            print (visual_img)
+            visual_img.save("test.jpg")
             break
+    batch =list(range(140,156))
+
+    udf.get_scores(vr.get_batch(batch),visualize=True)[1][0].save("test2.jpg")
+
    # print(image[4])
     #image[0][0].save("test.jpg")    
     os.makedirs(config.cached_gt_dir, exist_ok=True)
