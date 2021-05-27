@@ -1,7 +1,7 @@
 --video
-videos/test.mp4
+videos/test07.mp4
 --length
-800
+100000
 --diff_thres
 0.0001
 --num_train
