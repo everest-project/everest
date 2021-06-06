@@ -15,7 +15,7 @@ This is the referece implementation of Everest described in:
 
 ## Setup
 ```sh
-git clone https://github.com/everest-project/everest.git
+git clone --depth=1 https://github.com/everest-project/everest.git
 cd everest
 docker pull zllai/everest:1.2
 ```
