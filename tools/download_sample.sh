@@ -14,3 +14,14 @@ wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download
 wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1p-FeyS6ziojuPJ8zqidcGxN1JoxapGg-' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1p-FeyS6ziojuPJ8zqidcGxN1JoxapGg-" -O videos/test07.mp4 && rm -rf /tmp/cookies.txt
 
 
+cd weights
+for MODEL in 'hybrid_finetuned_fc6+' 'hybrid_finetuned_all' 'vgg19_finetuned_fc6+' 'vgg19_finetuned_all'; do
+  if [ ! -f "${MODEL}.pth" ]; then
+      echo "Downloading: ${MODEL}.pth"
+      wget https://github.com/fabiocarrara/visual-sentiment-analysis/releases/download/torch-models/${MODEL}.pth
+  else
+      echo "Skipping: ${MODEL}.pth already downloaded"
+  fi
+done
+cd ..
+
