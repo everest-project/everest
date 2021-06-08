@@ -18,8 +18,8 @@ from PIL import Image
 from utils.utils import *
 
 from utils.happy_moment_tools import sentiment_analysis 
-from alexnet import KitModel as AlexNet
-from vgg19 import KitModel as VGG19
+from utils.alexnet import KitModel as AlexNet
+from utils.vgg19 import KitModel as VGG19
 from tqdm import tqdm
 
 
