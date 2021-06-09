@@ -7,8 +7,6 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision.datasets.folder import default_loader
 from tqdm import tqdm
 
-from alexnet import KitModel as AlexNet
-from vgg19 import KitModel as VGG19
 
 from PIL import Image
 
