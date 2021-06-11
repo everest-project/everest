@@ -1,0 +1,174 @@
+{
+	"asset": {
+		"generator": "Unity 2018.2.14f1",
+		"extras": {
+			"exporterVersion" : "2.2.1"
+		},
+		"version": "2.0"
+	},
+	"accessors": [
+		{
+			"bufferView": 2,
+			"byteOffset": 0,
+			"componentType": 5126,
+			"count": 3107,
+			"max": [ 57.70866, 65.41851, 57.94812 ],
+			"min": [ -58.28484, -0.1229212, -57.94812 ],
+			"type": "VEC3"
+		},
+		{
+			"bufferView": 2,
+			"byteOffset": 37284,
+			"componentType": 5126,
+			"count": 3107,
+			"max": [ 0.9974604, 0.9984398, 0.9987074 ],
+			"min": [ -0.9971885, -0.762842, -0.9948857 ],
+			"type": "VEC3"
+		},
+		{
+			"bufferView": 1,
+			"byteOffset": 0,
+			"componentType": 5126,
+			"count": 3107,
+			"max": [ 0.8771872, 0.6343285 ],
+			"min": [ 0.7795083, 0.01351224 ],
+			"type": "VEC2"
+		},
+		{
+			"bufferView": 3,
+			"byteOffset": 0,
+			"componentType": 5126,
+			"count": 3107,
+			"max": [ 0.9999989, 0.06467073, 0.9999993, 1 ],
+			"min": [ -0.9999878, -0.1012151, -0.9999957, -1 ],
+			"type": "VEC4"
+		},
+		{
+			"bufferView": 0,
+			"byteOffset": 0,
+			"componentType": 5123,
+			"count": 3309,
+			"max": [ 3106 ],
+			"min": [ 0 ],
+			"type": "SCALAR"
+		}
+	],
+	"buffers": [
+		{
+			"byteLength": 155754,
+			"uri": "Unity2Skfb.bin"
+		}
+	],
+	"bufferViews": [
+		{
+			"buffer": 0,
+			"byteLength": 6618,
+			"target": 34963,
+			"byteOffset": 149136
+		},
+		{
+			"buffer": 0,
+			"byteLength": 24856,
+			"target": 34962,
+			"byteStride": 8,
+			"byteOffset": 0
+		},
+		{
+			"buffer": 0,
+			"byteLength": 74568,
+			"target": 34962,
+			"byteStride": 12,
+			"byteOffset": 24856
+		},
+		{
+			"buffer": 0,
+			"byteLength": 49712,
+			"target": 34962,
+			"byteStride": 16,
+			"byteOffset": 99424
+		}
+	],
+	"extensionsRequired": [
+		"KHR_materials_pbrSpecularGlossiness"
+	],
+	"extensionsUsed": [
+		"KHR_materials_pbrSpecularGlossiness"
+	],
+	"images": [
+		{
+			"uri": "rockbig.jpg"
+		}
+	],
+	"materials": [
+		{
+			"extensions": {
+				"KHR_materials_pbrSpecularGlossiness": {
+					"diffuseTexture" : {
+						"index" : 0,
+						"texCoord" : 0
+					},
+					"diffuseFactor": [1, 1, 1, 1],
+					"specularFactor": [0, 0, 0],
+					"glossinessFactor": 1				}
+
+			},
+			"emissiveFactor": [0, 0, 0],
+			"doubleSided": false,
+			"name": "Rock"
+		}
+	],
+	"meshes": [
+		{
+			"name": "mesh_Group51674_12268Mountain3",
+			"primitives": [
+				{
+					"attributes": {
+						"POSITION": 0,
+						"NORMAL": 1,
+						"TEXCOORD_0": 2,
+						"TANGENT": 3
+					},
+					"indices": 4,
+					"material": 0,
+					"mode": 4
+				}
+			]
+		}
+	],
+	"nodes": [
+		{
+			"name": "UnityGlTF_root",
+			"children": [
+				1
+			]
+		},
+		{
+			"name": "node_Mountain3_-1129440",
+			"mesh": 0,
+			"matrix": [1, 0, 0, 0, 0, 1, -4.371139E-08, 0, 0, 4.371139E-08, 1, 0, -259.1, 105.6938, -290, 1]
+		}
+	],
+	"samplers": [
+		{
+			"magFilter": 9729,
+			"minFilter": 9985,
+			"wrapS": 10497,
+			"wrapT": 10497
+		}
+	],
+	"scenes": [
+		{
+			"name":"defaultScene",
+			"nodes": [
+				0
+			]
+		}
+	],
+	"scene": 0,
+	"textures": [
+		{
+			"sampler": 0,
+			"source": 0
+		}
+	]
+}
