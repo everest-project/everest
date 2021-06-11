@@ -47,13 +47,16 @@ def sentiment_analysis(cropped_imgs,model, batch_size=8):
     dataloader = DataLoader(data, batch_size=batch_size, num_workers=0, pin_memory=True)
     
 
-    score = []
+    scores = []
     
     with torch.no_grad():
-        for x in tqdm(dataloader):
+        for x in dataloader:
             p = model(x.to('cuda')).cpu().numpy()  # order is (NEG, NEU, POS)
             for single_pic in p:
-                score.append( single_pic[2]-single_pic[0])
+                score = int(100*(single_pic[2]-single_pic[0]))
+                if score<0:
+                    score = 0
+                scores.append(score)
 
-    return score
+    return scores
     

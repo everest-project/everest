@@ -100,7 +100,6 @@ class ExcitingMoment(BaseScoringUDF):
                     door_y = (door_max[1]+door_max[3])/2
                     score = 1000-pow(math.sqrt(pow((door_x-ball_x),2)+pow((door_y-ball_y),2)),2)
                     score = int(score/20)
-                    print(score)
                     if score <= 0:
                         score = 0
                 scores.append(score)
