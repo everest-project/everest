@@ -34,8 +34,9 @@ class ExcitingMoment(BaseScoringUDF):
         self.arg_parser.add_argument("--obj", type=str, choices=obj_names, default="ball")
         # self.model_config = 'config/yolov3.cfg'
         # self.weights = 'weights/yolov3.weights'        
-        self.model_config = 'config/yolov3-spp5-custom.cfg'
-        self.weights = 'weights/yolov3-spp5-custom_best.weights'
+        self.script_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        self.model_config =os.path.join(self.script_path, 'config/yolov3-spp5-custom.cfg')
+        self.weights =os.path.join(self.script_path, 'weights/yolov3-spp5-custom_best.weights')
     
     def initialize(self, opt, gpu=None):
         self.opt = opt

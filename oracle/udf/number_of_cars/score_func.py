@@ -31,8 +31,9 @@ class NumberOfCars(BaseScoringUDF):
         self.arg_parser.add_argument("--class_thres", type=float, default=0.5)
         self.arg_parser.add_argument("--obj_thres", type=float, default=0)
         self.arg_parser.add_argument("--obj", type=str, choices=obj_names, default="car")
-        self.model_config = 'config/yolov3.cfg'
-        self.weights = 'weights/yolov3.weights'
+        self.script_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        self.model_config = os.path.join(self.script_path,'config/yolov3.cfg')
+        self.weights = os.path.join(self.script_path,'weights/yolov3.weights')
     
     def initialize(self, opt, gpu=None):
         self.opt = opt

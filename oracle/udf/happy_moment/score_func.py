@@ -36,8 +36,9 @@ class HappyMoment(BaseScoringUDF):
         self.arg_parser.add_argument("--class_thres", type=float, default=0.5)
         self.arg_parser.add_argument("--obj_thres", type=float, default=0)
         self.arg_parser.add_argument("--obj", type=str, choices=obj_names, default="person")
-        self.model_config = 'config/yolov3.cfg'
-        self.weights = 'weights/yolov3.weights'
+        self.script_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        self.model_config =os.path.join(self.script_path, 'config/yolov3.cfg')
+        self.weights =os.path.join(self.script_path, 'weights/yolov3.weights')
     
     def initialize(self, opt, gpu=None,sentiment_model_name = 'vgg19_finetuned_all'):
         self.opt = opt
@@ -51,7 +52,7 @@ class HappyMoment(BaseScoringUDF):
         
         print("Loading sentiment analysis weights...")
         self.sentiment_model = AlexNet if 'hybrid' in sentiment_model_name else VGG19
-        self.sentiment_model = self.sentiment_model('weights/{}.pth'.format(sentiment_model_name)).to('cuda')
+        self.sentiment_model = self.sentiment_model(os.path.join(self.script_path,'weights/{}.pth'.format(sentiment_model_name))).to('cuda')
         self.sentiment_model.eval()
         print("Done...")
     

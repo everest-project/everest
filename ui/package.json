@@ -1,0 +1,52 @@
+{
+  "name": "ui",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.3",
+    "agentkeepalive": "^4.1.4",
+    "http-proxy-middleware": "^1.0.6",
+    "mdbreact": "^5.0.1",
+    "prismjs": "1.23.0",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-loader-spinner": "^4.0.0",
+    "react-promise-tracker": "^2.1.0",
+    "react-responsive-gallery": "^1.2.5",
+    "react-scripts": "4.0.3",
+    "react-simple-code-editor": "0.11.0",
+    "react-simple-wheel-picker": "1.2.0",
+    "video-react": "^0.14.1",
+    "web-vitals": "^1.1.0",
+    "react-modal-image": "^2.5.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "backend": "FLASK_APP=backend.py python3 -m flask run"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
