@@ -18,7 +18,9 @@ import random
 import math
 from utils.video_reader import *
 from utils.label_reader import *
+from utils.utils import *
 random.seed(0)
+
 
 SF = namedtuple('SF', ['s', 'f'])
 class SelectionHeap():
@@ -299,7 +301,7 @@ def topk(opt, cdf, remained_ref, train_idx, val_idx, lr, vr):
 
     topk = list(reversed(certain_table.topk))
 
-    precision, rank_dist, score_error = evaluate(topk, k, lr, window, data_size)
+    precision, rank_dist, score_error = evaluate(topk, k, lr, window, data_size,get_cached_gt_path(opt))
     print("[EXP]precision:", precision) 
     print("[EXP]score_error:", score_error)
     print("[EXP]rank_dist:", rank_dist)

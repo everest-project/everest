@@ -330,7 +330,7 @@ def run_everest():
     # the config is hardcoded according to the video, todo: generate a config file according to the query params
     query = request.get_json()
     logging.info(f"Run query: {query}")
-    config_map = {
+    # config_map = {
     #    "traffic_footage.mp4": {"config_file": "config/archie_5h.data",
     #                   "udf_name": "obj_counting"},
     #    "dashcam.mov": {"config_file": "", 

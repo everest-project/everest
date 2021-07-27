@@ -20,6 +20,7 @@ from utils.label_reader import *
 from utils.parse_config import *
 from utils.video_reader import *
 
+cmdn_trans = transforms.Compose([transforms.Resize(config.cmdn_input_size)])
 
 def split_dataset(opt, vr, lr, save=False):
     random.seed(opt.random_seed)
@@ -40,7 +41,11 @@ def split_dataset(opt, vr, lr, save=False):
     hist = np.ones([opt.max_score]) * 10 # to smoothn the weight
     for s in scores:
         hist[s] += 1
-
+    
+    scores.sort()
+    scores = scores[::-1]
+    vr.score_threshold = scores[opt.k]
+    
     sample_max = hist.max()
     weight = sample_max / hist
 
@@ -109,7 +114,7 @@ def train_models(epochs, model_configs, mids, train_dataloader, valid_dataloader
         for imgs, scores in tqdm.tqdm(train_dataloader, desc="epoch %d/%d" % (epoch+1, epochs)):
             loss = 0.0
             for model in models:
-                _, mdn_output = model(imgs, scores=scores)
+                _, mdn_output = model(cmdn_trans(imgs), scores=scores)
                 wta_loss = mdn_output[0]
                 mdn_loss = mdn_output[1]
                 if epoch < 5:
@@ -143,7 +148,7 @@ def evaluate_video(models, mids, dataloader):
         scores_cpu = scores.cpu()
         with torch.no_grad():
             for i, (mean_dict, var_dict, model) in enumerate(zip(mean_dict_list, var_dict_list, models)):
-                _, mdn_output = model(imgs, scores=scores)
+                _, mdn_output = model(cmdn_trans(imgs), scores=scores)
                 pi, sigma, mu = mdn_output[2], mdn_output[3], mdn_output[4]
                 mdn_loss_list[i] += mdn_output[1].item()
                 num_loss_list[i] += 1
@@ -157,7 +162,6 @@ def evaluate_video(models, mids, dataloader):
                     else:
                         mean_dict[lab] += [mean[i].item()]
                         var_dict[lab] += [var[i].item()]
-
     for i, (mean_dict, var_dict) in enumerate(zip(mean_dict_list, var_dict_list)):
         print("profile of Model %d" % mids[i])
         print('K N Mean Var MSE')
@@ -199,11 +203,15 @@ def cmdn_scan(opt, best_model_path, vr, test_idxs, save=False):
     total_mu_list = []
     discarded_list = []
     remained_list = []
-
     with torch.no_grad():
         for imgs, discarded, remained in tqdm.tqdm(dataloader, desc="Inferencing"):
-            _, mdn_output = cmdn(imgs) 
+            _, mdn_output = cmdn(cmdn_trans(imgs)) 
             pi, sigma, mu = mdn_output[2], mdn_output[3], mdn_output[4]
+            
+            means = (mu*pi).sum(-1)
+            selected = means>vr.score_threshold
+            vr.add_cached_imgs(remained[selected,0].tolist(),imgs[selected], means[selected].tolist())
+            
             total_pi_list.append(pi.cpu())
             total_sigma_list.append(sigma.cpu())
             total_mu_list.append(mu.cpu())

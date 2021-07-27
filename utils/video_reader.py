@@ -12,8 +12,10 @@ from decord import VideoReader
 import config
 import threading
 import queue
+import heapq
 
 LMDB_MAP_SIZE = 1 << 40
+cmdn_trans = transforms.Compose([transforms.Resize((128,128))])
 class DirectoryVideoReader():
     def __init__(self, img_dir, img_size=416):
         self.img_size = img_size
@@ -52,11 +54,34 @@ class DecordVideoReader():
         if type(img_size) == int:
             img_size = (img_size, img_size)
         self._vr = VideoReader(video_file, ctx=ctx, width=img_size[0], height=img_size[1], num_threads=num_threads)
+        
+        self.score_threshold = 0
+        self.cached_imgs = {}
+        self.used_imgs_num = {}
+        self.min_heap = []
+        self.imgs_maximum = 1000
 
+    def add_cached_imgs(self,batch,imgs,means):
+        if (len(self.cached_imgs) < self.imgs_maximum):    
+            for i, idx in enumerate(batch):
+                self.cached_imgs[idx] = imgs[i]
+                heapq.heappush(self.min_heap, (means[i], idx))
+        else:
+            for i, idx in enumerate(batch):
+                poped_element = heapq.heappushpop(self.min_heap, (means[i],idx))
+                # replace
+                if (poped_element[1] in self.cached_imgs.keys() ):
+                    self.cached_imgs.pop(poped_element[1])
+                    self.cached_imgs[idx] = imgs[i]
+                    
     def __len__(self):
         return len(self._vr)-self.offset
 
     def __getitem__(self, idx):
+        if self.cached_imgs.get(idx)!=None:
+            self.used_imgs_num[idx] = 1
+            return self.cached_imgs.get(idx)
+
         if self.is_torch:
             return self._vr[idx+self.offset].permute(2, 0, 1).contiguous().float().div(255)
         else:
@@ -64,10 +89,33 @@ class DecordVideoReader():
 
     def get_batch(self, batch):
         batch = [b+self.offset for b in batch]
+        #print(self.cached_imgs.keys()) 
+        result = []
+
         if self.is_torch:
-            return self._vr.get_batch(batch).permute(0, 3, 1, 2).contiguous().float().div(255)
+            
+            for idx in batch:
+                img = self.cached_imgs.get(idx)
+                if img==None:
+                    img = self._vr[idx].permute(2, 0, 1).contiguous().float().div(255)
+                else:
+                    self.used_imgs_num[idx] = 1
+                result.append(img)
+            result = torch.stack(result)
+        
         else:
-            return self._vr.get_batch(batch).asnumpy()
+            
+            for idx in batch:
+                img = self.cached_imgs.get(idx)
+                if img==None: 
+                    img = self._vr[idx].asnumpy()
+                else:
+                    self.used_imgs_num[idx] = 1
+                result.append(img)
+            result = np.stack(result)
+        
+        return result
+        
 
 def loader_thread(video_reader, label_reader, indices, batch_size, q):
     decord.bridge.set_bridge('torch') #need to set bridge in new thread
@@ -99,7 +147,7 @@ class VideoLoader(object):
         self._queue = queue.Queue(128)
         self._cur = 0
         self._len = (len(indices) + batch_size - 1) // batch_size
-        self._cache_imgs = torch.zeros([len(indices), 3, config.cmdn_input_size[0], config.cmdn_input_size[1]])
+        self._cache_imgs = torch.zeros([len(indices), 3, self._vr.img_size[0],self._vr.img_size[1]])
         self._cache_labels = torch.zeros([len(indices)])
         self._cached = False
 
