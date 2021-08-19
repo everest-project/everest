@@ -1,0 +1,17 @@
+--video
+happiness_test.mp4
+--length
+112747
+--diff_thres
+0.0001
+--num_train
+0.005
+--num_valid
+3000
+--max_score
+200
+--udf
+happiness
+--class_thres
+0.5
+--save
