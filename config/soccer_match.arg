@@ -1,0 +1,17 @@
+--video
+videos/soccer_match.mp4
+--diff_thres
+0.0001
+--num_train
+0.05
+--num_valid
+1000
+--max_score
+1000
+--udf
+exciting_moment
+--obj
+ball
+--class_thres
+0.5
+--save

@@ -35,7 +35,9 @@ if __name__ == "__main__":
     vr = DecordVideoReader(opt.video, udf.get_img_size(), is_torch=False)
     num_batches = len(vr) // opt.batch
     batches = [list(range(i * opt.batch, (i+1) * opt.batch)) for i in range(num_batches)]
-
+    remain = len(vr)% opt.batch
+    if remain > 0:
+        batches.append([num_batches*opt.batch+i for i in range(remain)])
     scores = []
     for batch in tqdm.tqdm(batches, desc="labeling"):
         if len(batch) > 0:

@@ -8,6 +8,9 @@ from utils.parse_config import parse_model_config
 import math
 import io
 from PIL import Image
+import numpy as np
+import torch
+import cv2
 
 LMDB_MAP_SIZE = 1 << 40
 
@@ -70,3 +73,35 @@ class CachedGTLabelReader():
     def get_batch(self, batch):
         batch = [idx + self.offset for idx in batch]
         return self.cached_gt[batch]
+
+class LabelReader():
+    def __init__(self, vr, udf, offset=0):
+        self.vr = vr
+        self.udf = udf
+        self.offset = 0
+        self.labels = {}
+    
+    def __len__(self):
+        #return len(self.labels)
+        return len(self.vr)
+
+    def __getitem__(self, idx):
+        if (self.labels.get(idx+self.offset)==None):            
+            img = self.vr[idx+self.offset]
+            
+            # transform tensor to numpy
+            if type(img) is torch.Tensor:
+                img = (img.permute(1,2,0)*255).cpu().numpy().astype('uint8')
+            
+            # image height and width should be (416,416)
+            img = img[np.newaxis,:]
+            self.labels[idx + self.offset] = self.udf.get_scores(img)[0]
+        return self.labels.get(idx+self.offset)
+
+    def get_batch(self, batch):
+        labels = []
+        for idx in batch:
+            labels.append(self[idx])
+        return labels
+
+ 

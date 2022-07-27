@@ -12,6 +12,7 @@ from utils.label_reader import *
 from oracle.utils import *
 from phase1 import *
 from phase2 import topk
+from datetime import datetime
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(fromfile_prefix_chars='@')
@@ -48,10 +49,15 @@ if __name__ == "__main__":
     split_path = get_split_path(opt)
     checkpoint_dir = get_checkpoint_dir(opt)
 
-    udf = get_udf_class(opt.udf)()
-    vr = DecordVideoReader(opt.video, img_size=config.cmdn_input_size, offset=opt.offset)
-    lr = CachedGTLabelReader(cached_gt_path, opt.offset)
-    
+    start_time = datetime.now()
+
+    udf = get_udf_class(opt.udf)()    
+    udf_arg_parser = udf.get_arg_parser()
+    udf_opt, _ = udf_arg_parser.parse_known_args()
+    udf.initialize(udf_opt, opt.gpu)
+    vr = DecordVideoReader(opt.video, img_size=(416,416), offset=opt.offset)
+    lr = LabelReader(vr ,udf)
+
     if opt.skip_train_cmdn:
         train_idx = np.load(os.path.join(split_path, "train_idxs.npy"))
         valid_idx = np.load(os.path.join(split_path, "valid_idxs.npy"))
@@ -80,3 +86,7 @@ if __name__ == "__main__":
         cdf = gen_cdf(pi, mu, sigma, opt.max_score)
         topk(opt, cdf, remained_ref, train_idx, valid_idx, lr, vr)
 
+    time_cost = datetime.now()- start_time
+    print("time cost:{}".format(time_cost))
+    #print("cached imgs used:{}".format(len(vr.used_imgs_num)))
+    #print("total cached imgs:{}".format(len(vr.cached_imgs)))
